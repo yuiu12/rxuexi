@@ -1,0 +1,49 @@
+---
+title: "Teach Stock Monthly Report"
+author: "IT Department"
+output: html_document
+params:
+  enddate: !r Sys.Date() 
+  startdate: !r Sys.Date() -30 
+---
+## Largest tech stocks 
+One month performance for 
+- Apple(AAPL) 
+- AMazon (AMZN)
+- Alphabet/Google (GOOG) 
+-Microsoft (MSFT) 
+```{r, echo=FALSE,message=FALSE}
+library(tidyquant) 
+library(ggplot2) 
+tickers = c("AAPL","MSFT","AMZN","GOOG") 
+prices <- tq_get(tickers,from=params$startdate,to=param$enddate,get="stock.prices") 
+ggplot(prices,aes(x=date,y=adjusted,color=symbol)) + 
+  geom_line(size=1) + facet_wrap(~symbol,scale="free") + 
+  theme_bw() + 
+  theme(legend.position = "none") + 
+  scale_x_date(date_labels = "%m-%d") + 
+  scale_color_brewer(palette = "Set1") + 
+  labs(title="Stock Price Chart",subtitle = paste(params$startdate,"to",params$enddate),x="Date",y="Adjusted Price")
+```
+Source: [Yahoo Finance] 
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
